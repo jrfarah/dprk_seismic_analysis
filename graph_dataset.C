@@ -113,29 +113,23 @@ int main( int argc, char *argv[] )
         while(getline(db_file, line))
         {   
             std::stringstream ss(line);
-            /*line.erase(0,1);*/
-            // line.erase(line.size()-1);
             exploded_line = explode(line, ' ');
 
             t[line_num] = line_num;
             v[line_num] = std::stod(exploded_line[1]);
-            // if(tmp<=0) {
-            //     if(tmp == 0) { continue; }
-            //     v[line_num] = -1*pow((log10(-1*tmp)), 2);
-            //     line_num++;
-            //     continue;
-            // }
-            // v[line_num] = pow(log10(tmp), 2);
+            if(tmp<=0) {
+                if(tmp == 0) { continue; }
+                v[line_num] = -1*pow((log10(-1*tmp)), 2);
+                line_num++;
+                continue;
+            }
+            v[line_num] = pow(log10(tmp), 2);
 
             if(line_num%50==0) {    
                 elapsed_seconds = (std::chrono::system_clock::now() - time_start);
                 progress(elapsed_seconds.count(), line_num, num_of_lines);
             }
             line_num++;
-            // if(line_num > 100000)
-            // {
-            //     break;
-            // }
         }
     }
     TGraph *gr = new TGraph(num_of_lines,t,v);
@@ -144,9 +138,6 @@ int main( int argc, char *argv[] )
     gr->GetYaxis()->SetTitle("Intensity (units denoted by seismograph)");
     gr->Draw("");
     canvas->Update();
-    // canvas->SaveAs("total_realtime.pdf");
-
-
 
     db_file.close();
     app.Run();
